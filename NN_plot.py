@@ -105,5 +105,5 @@ class DrawNN():
         network.draw()
 
 
-network = DrawNN( [15,10,20,1] )
+network = DrawNN( [10,15,20,10, 1] )
 network.draw()
