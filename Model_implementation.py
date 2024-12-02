@@ -249,7 +249,7 @@ def poisson_nll(y_true, y_pred):
     return tf.reduce_mean(y_pred - y_true * tf.math.log(y_pred))
 
 # Define the number of epochs (iterations) to run,
-Nepochs = 10
+Nepochs = 1000
 
 #############################################################################################
 # MODEL1: NN(15,25,10), with continuous variables

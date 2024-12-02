@@ -77,7 +77,7 @@ plt.title('Pearson Correlation Matrix')
 plt.show()
 
 #Same but for Kendall
-correlation_matrix = df_tesdd.corr(method='kendall')
+correlation_matrix = df_numerical.corr(method='kendall')
 plt.figure(figsize=(8, 6))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', vmin=-1, vmax=1, linewidths=0.5)
 plt.title('Kendall Correlation Matrix')
@@ -85,8 +85,8 @@ plt.show()
 
 #Hex bin plot for belgium
 data = pd.DataFrame({
-    'Longitude': df_test['long'],
-    'Latitude': df_test['lat'],
+    'Longitude': df['long'],
+    'Latitude': df['lat'],
     #'Value': df_test['nclaims']  # Optional: Weight values
 })
 #heatmap is another possibility, but we chose not to use since the other looks better
