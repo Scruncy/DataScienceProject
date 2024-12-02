@@ -17,7 +17,69 @@ df = df[df['nclaims'] < 6]
 df = df.drop(columns=['expo'])
 df['average'] = pd.to_numeric(df['average'], errors='coerce').fillna(0)
 df['province'] = df['postcode'].astype(str).str[0].astype(int)
-df = df.drop(columns=['postcode'])
+df = df.drop(columns=['postcode', 'id'])
+
+def plot_barplot(arr, title, first, second):
+    """
+    This function takes an array and creates a barplot showing the frequency of each unique value in the array.
+
+    Parameters:
+    arr (array-like): The input array or list with categorical or discrete values.
+    """
+    # Count occurrences of each unique value in the array
+    unique_values, counts = np.unique(arr, return_counts=True)
+
+    # Create a DataFrame for easier plotting
+    data = {'Value': unique_values, 'Count': counts}
+
+    # Plot using seaborn's barplot
+    sns.barplot(x='Value', y='Count', data=pd.DataFrame(data))
+
+    # Set labels and title
+    plt.xlabel(first)
+    plt.ylabel(second)
+    plt.title(title)
+
+    # Show the plot
+    plt.show()
+
+def plot_categorical_histogram(arr, classes, title="", xlabel="", ylabel="Absolute Frequency"):
+
+    # Categorize the data based on the custom class intervals
+    categorized_data = []
+    for value in arr:
+        for i in range(len(classes) - 1):
+            if classes[i] <= value < classes[i + 1]:
+                categorized_data.append(f'{classes[i]}-{classes[i + 1]}')
+                break
+
+    # Count occurrences within each class
+    counts = pd.Series(categorized_data).value_counts().sort_index()
+
+    # Sort the counts by the numeric values of the class intervals (not lexicographically)
+    counts.index = pd.Categorical(counts.index, categories=[f'{classes[i]}-{classes[i + 1]}' for i in range(len(classes) - 1)], ordered=True)
+    counts = counts.sort_index()
+
+    # Plot the histogram (bar chart)
+    plt.bar(counts.index, counts.values, edgecolor='black')
+
+    # Set the title and labels
+    plt.title(title)
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+
+    # Display the plot
+    plt.xticks(rotation=45)  # Rotate labels if needed
+    plt.show()
+
+plot_barplot(df['claim'].values, 'Claim occured', '', 'Absolute frequency')
+plot_barplot(df['province'].values, 'Provinces', 'Province', 'Absolute frequency')
+plot_barplot(df['sex'].values, 'Gender', '', 'Absolute frequency')
+plot_barplot(df['bm'].values, 'Bonus_malus classes', 'classes', 'Absolute frequency')
+plot_barplot(df['coverage'].values, 'Type of coverage', '', 'Absolute frequency')
+plot_categorical_histogram(df['power'], [0, 25, 50, 75, 100, 125, 150, 175, 200, 250], 'Power')
+plot_categorical_histogram(df['ageph'], [18, 25, 30, 35, 40, 45, 50, 55, 60, 65, 150], 'Age of the policy-holder')
+plot_categorical_histogram(df['agec'], [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50], "Age of the vehicle")
 
 # Plotting the data, compared with a real poisson with lambda the mean
 empirical_data = df['nclaims'].values
