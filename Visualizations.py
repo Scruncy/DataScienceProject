@@ -20,32 +20,23 @@ df['province'] = df['postcode'].astype(str).str[0].astype(int)
 df = df.drop(columns=['postcode', 'id'])
 
 def plot_barplot(arr, title, first, second):
-    """
-    This function takes an array and creates a barplot showing the frequency of each unique value in the array.
-
-    Parameters:
-    arr (array-like): The input array or list with categorical or discrete values.
-    """
     # Count occurrences of each unique value in the array
     unique_values, counts = np.unique(arr, return_counts=True)
 
-    # Create a DataFrame for easier plotting
+    # Create a DataFrame for making life easier
     data = {'Value': unique_values, 'Count': counts}
 
-    # Plot using seaborn's barplot
     sns.barplot(x='Value', y='Count', data=pd.DataFrame(data))
 
-    # Set labels and title
     plt.xlabel(first)
     plt.ylabel(second)
     plt.title(title)
 
-    # Show the plot
     plt.show()
 
 def plot_categorical_histogram(arr, classes, title="", xlabel="", ylabel="Absolute Frequency"):
 
-    # Categorize the data based on the custom class intervals
+    # Categorize the data based on the custom class intervals that we take from the other file
     categorized_data = []
     for value in arr:
         for i in range(len(classes) - 1):
@@ -53,23 +44,21 @@ def plot_categorical_histogram(arr, classes, title="", xlabel="", ylabel="Absolu
                 categorized_data.append(f'{classes[i]}-{classes[i + 1]}')
                 break
 
-    # Count occurrences within each class
+    # to count how many values in each class
     counts = pd.Series(categorized_data).value_counts().sort_index()
 
-    # Sort the counts by the numeric values of the class intervals (not lexicographically)
+    # Sort the counts by the numeric values of the class intervals
     counts.index = pd.Categorical(counts.index, categories=[f'{classes[i]}-{classes[i + 1]}' for i in range(len(classes) - 1)], ordered=True)
     counts = counts.sort_index()
 
     # Plot the histogram (bar chart)
     plt.bar(counts.index, counts.values, edgecolor='black')
 
-    # Set the title and labels
     plt.title(title)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
 
-    # Display the plot
-    plt.xticks(rotation=45)  # Rotate labels if needed
+    plt.xticks(rotation=45)
     plt.show()
 
 plot_barplot(df['claim'].values, 'Claim occured', '', 'Absolute frequency')
